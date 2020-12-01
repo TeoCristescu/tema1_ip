@@ -1,2 +1,2 @@
-package PACKAGE_NAME;public class CExceptie {
+public class CExceptie extends Exception {
 }
