@@ -1,7 +1,6 @@
-public class SearchTask implements Task{
+public class ListTask implements Task{
     public void execute()
     {
 
     };
-
 }
