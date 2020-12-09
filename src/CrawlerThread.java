@@ -1,7 +1,7 @@
 import java.net.URL;
 import java.util.ArrayList;
 
-public   class crawlerThread {
+public   class CrawlerThread {
     public void start(){;}
     public URLQueue getQ(){}
     public ArrayList<Task> getTasks(){}
