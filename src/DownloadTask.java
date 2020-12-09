@@ -85,9 +85,6 @@ public class DownloadTask implements Task {
             for(int i=0;i<numThreads;i++)
             {
 
-                //int start= (int) ((i)*ceil(finalQSize/numThreads));
-                //int end= (int) ((i+1)*ceil(finalQSize/numThreads));
-                //System.out.println("start "+start+" end "+end);
                 CrawlerThread aux=new CrawlerThread();
                 aux.set_CrawlerThread(this.downloadPending,i,numThreads);
                 myThreads.add(aux);

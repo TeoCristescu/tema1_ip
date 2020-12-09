@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Main {
+<<<<<<< HEAD
 
     public static void main(String[] args)  {
 
@@ -12,6 +13,15 @@ public class Main {
         DownloadTask dw=new DownloadTask(4,myUrl,".pdf#.png",1);
         dw.execute();
         dw.listURLQ();
+=======
+    public static void main(String[] args)  {
+        String myUrl="https://www.emag.ro/";
+        DownloadTask dw=new DownloadTask(4,myUrl,".pdf#.png",1);
+        dw.execute();
+        dw.listURLQ();
+
+    }
+>>>>>>> fc6d453858bfef910be920f0995aa834a7272cd2
 
     }
 }
