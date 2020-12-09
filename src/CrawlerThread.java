@@ -22,24 +22,6 @@ public   class CrawlerThread extends Thread {
         for(int i=start;i<end;i++)
         {
             URL url = downloadPending.getLinksList(i);
-            try {
-                 reader = new BufferedReader(new InputStreamReader(url.openStream()));
-                BufferedWriter writer = new BufferedWriter(new FileWriter("page"+i+".html"));
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-
-                    writer.write(line);
-                    if(i==0)
-                    {
-                    System.out.println(line);
-                    }
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             String[] arrOfStr = url.toString().split("\\?", 2);
             String withoutAsk=arrOfStr[0];
             String[] calea=withoutAsk.split("//",0);
@@ -48,9 +30,6 @@ public   class CrawlerThread extends Thread {
             int nrNames=names.length;
             String calea2=calea[1].replaceAll("/","\\\\");
 
-
-
-            System.out.println("nume " +calea2);
             int lenCalea2=calea2.length();
             if(calea2.charAt(lenCalea2-1)=='\\')
             {
