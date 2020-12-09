@@ -1,15 +1,22 @@
-package WebCrawler.tema1_ip.src;
-
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
+
 public class SitemapTask implements Task {
-    public static void generateSitemap(String word)
-    {
+    public String path;
+
+    public SitemapTask(String path) {
+        this.path = path;
+    }
+
+    public void generateSitemap(File dirPath) {
 
     }
 
+
     @Override
-    public void execute() throws DirectoryNotFoundException, IOException {
+    public void execute() throws DirectoryNotFoundException{
 
     }
 }

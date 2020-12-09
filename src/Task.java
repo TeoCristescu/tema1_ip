@@ -1,6 +1,3 @@
-package WebCrawler.tema1_ip.src;
-
-import WebCrawler.tema1_ip.src.DirectoryNotFoundException;
 
 import java.io.IOException;
 
