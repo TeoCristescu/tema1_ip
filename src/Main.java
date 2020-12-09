@@ -1,8 +1,7 @@
-package WebCrawler.tema1_ip.src;
-import java.io.IOException;
-
 public class Main {
-    public static void main(String[] args) throws DirectoryNotFoundException, IOException {
+    private static Crawler Crawler;
+
+    public static void main(String[] args) throws DirectoryNotFoundException{
     Crawler.run(args);
 
     }
