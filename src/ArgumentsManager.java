@@ -43,8 +43,10 @@ public class ArgumentsManager
     private static void validateArgs(String arg1, String arg2) throws ExceptieArgumente
     {
         switch (arg1) {
-            case "crawler":
+            case "crawl":
                 /* TODO: set crawler manager values in order to start the download */
+
+
                 break;
             case "list":
                 /* TODO: set crawler manager values in order to start the list */
