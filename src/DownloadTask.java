@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -13,8 +14,8 @@ import static java.lang.Math.round;
 
 public class DownloadTask implements Task {
     private int numThreads;
-    private     String extensions;
-    private  int depthLevel;
+    private String extensions;
+    private int depthLevel;
     String domain;
     URLQueue downloadPending;
     @Override
@@ -26,7 +27,7 @@ public class DownloadTask implements Task {
             e.printStackTrace();
             return;
         }
-        String line = null;
+        //String line = null;
         downloadPending.addToList(toDownload);
         int indexQ=0;
 
@@ -35,25 +36,27 @@ public class DownloadTask implements Task {
             for(int i=0;i<depthLevel;i++)
             {
                 int qsize=this.downloadPending.getSize();
+                String urlRegex=this.domain;
+                urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
                 for(int j=indexQ;j<qsize;j=j+1)
                 {
                     //System.out.println("depth "+i+" j "+j+" qsize "+qsize);
                     URL toDownAux = this.downloadPending.getLinksList(j);
                     try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(toDownAux.openStream()));
-                        //String urlRegex = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-                        String urlRegex=this.domain;
-                        urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
+                        //BufferedReader reader = new BufferedReader(new InputStreamReader(toDownAux.openStream()));
+                        InputStream in = toDownAux.openStream();
                        //System.out.println(urlRegex);
                         Pattern urlPattern = Pattern.compile(urlRegex);
-                        line="";
+                        //line="";
                         Matcher regexMatcher;
+                        int length = -1;
+                        byte[] buffer = new byte[4096];
 
-
-                        while ((line = reader.readLine()) != null) {
+                        while ((length = in.read(buffer)) > -1)//(line=reader.readLine())!=null
+                        {
                             Pattern r = Pattern.compile(urlRegex);
-                            Matcher m = r.matcher(line);
-                            if (m.find())
+                            Matcher m = r.matcher(buffer.toString());
+                            if (m.find())//m.find
                             {
                                 if (m.group(0).length() != 0)
                                 {
@@ -65,6 +68,9 @@ public class DownloadTask implements Task {
                                      }
                                 }
                             }
+
+
+
                             //System.out.println(line);
                         }
                     }
@@ -87,6 +93,7 @@ public class DownloadTask implements Task {
 
                 CrawlerThread aux=new CrawlerThread();
                 aux.set_CrawlerThread(this.downloadPending,i,numThreads);
+                aux.set_extensions(this.extensions);
                 myThreads.add(aux);
                 aux.start();
 
