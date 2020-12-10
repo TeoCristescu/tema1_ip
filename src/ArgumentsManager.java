@@ -45,6 +45,7 @@ public class ArgumentsManager
         switch (arg1) {
             case "crawler":
                 /* TODO: set crawler manager values in order to start the download */
+
                 break;
             case "list":
                 /* TODO: set crawler manager values in order to start the list */
