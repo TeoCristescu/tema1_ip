@@ -8,7 +8,10 @@ public class CrawlerManager {
     private int max_depth;
     private String type;
     private static CrawlerManager obj;
-
+    private  String URL;
+    private String list_argument;
+    private String search_argument;
+    public String sitemap_path;
     private CrawlerManager(){
 
 
@@ -21,17 +24,24 @@ public class CrawlerManager {
         }
         return obj;
     }
-    public void crawl() throws FileNotFoundException {
+
+    public void search_config(String searcharg){
+        search_argument=searcharg;
+    }
+    public void list_config(String item){
+        list_argument=item;
+    }
+    public void crawl_config( String URL_root ) throws FileNotFoundException {
+        URL=URL_root;
         File f=new File("config.txt");
         Scanner scan = new Scanner(f);
         String line="";
         while(scan.hasNextLine())
             try {
 
-
                 line = scan.nextLine();
                 if (line.contains("n_threads")) {
-                    threads_nr = Integer.parseInt(line.substring(9);
+                    threads_nr = Integer.parseInt(line.substring(9));
                 } else if (line.contains("root_dir")) {
                     root_dir = line.substring(8);
                 } else if (line.contains("log_level")) {
@@ -39,10 +49,16 @@ public class CrawlerManager {
                 } else if (line.contains("max_depth")) {
                     max_depth = Integer.parseInt(line.substring(9));
                 }
+                else{
+                    throw new ExceptieArgumente("Option not recognised in config file");
+                }
             } catch (ExceptieArgumente e) {
                 e.printStackTrace();
 
             }
+    }
+    public void sitemap_config( String path){
+        sitemap_path= path;
     }
 
     public int getThreads_nr() {
