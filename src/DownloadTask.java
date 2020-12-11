@@ -42,35 +42,33 @@ public class DownloadTask implements Task {
                 {
                     //System.out.println("depth "+i+" j "+j+" qsize "+qsize);
                     URL toDownAux = this.downloadPending.getLinksList(j);
+                    String line;
                     try {
-                        //BufferedReader reader = new BufferedReader(new InputStreamReader(toDownAux.openStream()));
-                        InputStream in = toDownAux.openStream();
-                       //System.out.println(urlRegex);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(toDownAux.openStream()));
+                        //String urlRegex = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+                        //String urlRegex=this.domain;
+                        urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
+                        //System.out.println(urlRegex);
                         Pattern urlPattern = Pattern.compile(urlRegex);
-                        //line="";
+                        line="";
                         Matcher regexMatcher;
-                        int length = -1;
-                        byte[] buffer = new byte[4096];
 
-                        while ((length = in.read(buffer)) > -1)//(line=reader.readLine())!=null
-                        {
+
+                        while ((line = reader.readLine()) != null) {
                             Pattern r = Pattern.compile(urlRegex);
-                            Matcher m = r.matcher(buffer.toString());
-                            if (m.find())//m.find
+                            Matcher m = r.matcher(line);
+                            if (m.find())
                             {
                                 if (m.group(0).length() != 0)
                                 {
                                     URL aux = new URL(m.group(0));
-                                     if(this.downloadPending.exists_elem(aux)==0)
-                                     {
+                                    if(this.downloadPending.exists_elem(aux)==0)
+                                    {
                                         this.downloadPending.addToList(aux);
                                         auxIndexQ++;
-                                     }
+                                    }
                                 }
                             }
-
-
-
                             //System.out.println(line);
                         }
                     }
