@@ -74,7 +74,7 @@ public class DownloadTask implements Task {
                     }
                     catch ( Exception e1)
                     {
-                        System.out.println("Pagina nu există:");
+                        System.out.println("Pagina nu exista:");
                         System.out.println(e1.toString());
 
 
