@@ -19,6 +19,8 @@ public   class CrawlerThread extends Thread {
 
     public void downloadTask(URLQueue downloadPending,int start,int end)  {
         //BufferedReader reader;
+        CrawlerManager crawler_instance = CrawlerManager.getInstance();
+        String root_dir = crawler_instance.getRoot_dir();
         for(int i=start;i<end;i++)
         {
             URL url = downloadPending.getLinksList(i);
@@ -30,8 +32,6 @@ public   class CrawlerThread extends Thread {
             //int nrNames=names.length;
             String calea2=calea[1].replaceAll("/","\\\\");
             int lenCalea2=calea2.length();
-
-
 
             try {
 
@@ -55,6 +55,7 @@ public   class CrawlerThread extends Thread {
                             break;
                         }
                     }
+
                 System.out.println("extension "+theExtension);
                 System.out.println("calea "+calea2);
                 //writer = new BufferedWriter(new FileWriter(calea2+"index"+i+theExtension));
@@ -65,14 +66,27 @@ public   class CrawlerThread extends Thread {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 FileOutputStream fos = new FileOutputStream(f);
 
-
                 // System.out.println("pagina "+i+" este "+url.toString());
-                String line;
-                while ((length = in.read(buffer)) > -1)//(line=reader.readLine())!=null
+                while ((length = in.read(buffer)) > -1) //(line=reader.readLine())!=null
                 {
-                    fos.write(buffer,0,length);
+                    String myLink = new String(buffer);
+                    boolean needs_replacement = false;
+                    if(myLink.contains("href=\"http://")) {
+                        myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
+                        needs_replacement = true;
+                    }
+                    if(myLink.contains("href=\"https://")) {
+                        myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
+                        needs_replacement = true;
+                    }
+
+                    if(needs_replacement)
+                        fos.write(myLink.getBytes(), 0, myLink.length());
+                    else
+                        fos.write(buffer, 0, length);
                 }
                 fos.close();
                 in.close();
@@ -81,16 +95,9 @@ public   class CrawlerThread extends Thread {
             {
                 System.out.println("Pagina nu există:");
                 System.out.println(e1.toString());
-
-
             }
-
-
         }
-
-
     }
-
 
     public void set_CrawlerThread(URLQueue _downloadPending,int _threadId,int _nrThreads)
     {
@@ -108,13 +115,10 @@ public   class CrawlerThread extends Thread {
         {
             endIndex=finalQSize;
         }
-
     }
+	
     public void set_extensions(String _extensions)
     {
         this.extensions=_extensions;
     }
 }
-
-
-
