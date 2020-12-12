@@ -18,17 +18,16 @@ public class CrawlerManager {
     private static LogManager log= new LogManager();
     
 
-    private CrawlerManager(){
+    private CrawlerManager() { }
 
-    }
     static void write2logfile(String message)  {
         try{
             log.writeToLogFile(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
     public static CrawlerManager getInstance(){
         if(obj==null)
         {
@@ -44,37 +43,29 @@ public class CrawlerManager {
     public void list_config(String item,String root){
         list_argument=item;root_dir=root;
     }
-    public void crawl_config(String configfile) throws FileNotFoundException {
+    public void crawl_config(String configfile) throws FileNotFoundException, ExceptieArgumente {
 
         File f=new File(configfile);
         Scanner scan = new Scanner(f);
         String line="";
-        while(scan.hasNextLine())
-            try {
-
-                line = scan.nextLine();
-                if (line.contains("n_threads")) {
-                    threads_nr = Integer.parseInt(line.substring(10));
-                } else if (line.contains("root_dir")) {
-                    root_dir = line.substring(9);
-                } else if (line.contains("log_level")) {
-                    log_level = Integer.parseInt(line.substring(10));
-                } else if (line.contains("max_depth")) {
-                    max_depth = Integer.parseInt(line.substring(10));
-                }
-                else if (line.contains("URL")) {
-                    URL = line.substring(4);
-                }
-                else if (line.contains("extensions")) {
-                    extensions = line.substring(11);
-                }
-                else{
-                    throw new ExceptieArgumente("Option not recognised in config file");
-                }
-            } catch (ExceptieArgumente e) {
-                e.printStackTrace();
-
+        while(scan.hasNextLine()) {
+            line = scan.nextLine();
+            if (line.contains("n_threads")) {
+                threads_nr = Integer.parseInt(line.substring(10));
+            } else if (line.contains("root_dir")) {
+                root_dir = line.substring(9);
+            } else if (line.contains("log_level")) {
+                log_level = Integer.parseInt(line.substring(10));
+            } else if (line.contains("max_depth")) {
+                max_depth = Integer.parseInt(line.substring(10));
+            } else if (line.contains("URL")) {
+                URL = line.substring(4);
+            } else if (line.contains("extensions")) {
+                extensions = line.substring(11);
+            } else {
+                throw new ExceptieArgumente("Option not recognised in config file");
             }
+        }
     }
     public void setType(String type) {
         this.type = type;

@@ -69,25 +69,43 @@ public   class CrawlerThread extends Thread {
 
                 FileOutputStream fos = new FileOutputStream(f);
 
-                // System.out.println("pagina "+i+" este "+url.toString());
-                while ((length = in.read(buffer)) > -1) //(line=reader.readLine())!=null
+                /**
+                 * In aceasta bucla while se petrece citirea stream-ului de octeti primiti din conexiunea cu un URL,
+                 * schimbarea substringului de inceput al unui URL cu o locatie locala: root directory din fisierul
+                 * de configurare root_dir si scrierea noului string format in fisierul creat mai sus
+                 * @author Scraba Cristian
+                 */
+                while ((length = in.read(buffer)) > -1)
                 {
+                    /*
+                    * Se copiaza buffer-ul in care citim stream-ul de octeti primt intr-o variabila locala
+                    * de tip String pentru a putea lucra cu metodele clasei String
+                    */
                     String myLink = new String(buffer);
                     boolean needs_replacement = false;
+
+                    /* Se verifica existenta substringului de inceput al unui URL din cadrul atributului href */
                     if(myLink.contains("href=\"http://")) {
+                        /* Se inlocuiesc toate aparitiile substringului cu locatia locala root_dir */
                         myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
                         needs_replacement = true;
                     }
+                    /* La fel ca mai sus numai ca pentru https */
                     if(myLink.contains("href=\"https://")) {
                         myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
                         needs_replacement = true;
                     }
 
+                    /*
+                    Daca s-a gasit si inlocuit acel substring vom scrie noul string in fisier,
+                    * daca nu, vom scrie stringul neschimbat
+                    */
                     if(needs_replacement)
                         fos.write(myLink.getBytes(), 0, myLink.length());
                     else
                         fos.write(buffer, 0, length);
                 }
+
                 fos.close();
                 in.close();
             }
