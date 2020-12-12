@@ -1,7 +1,8 @@
+import java.io.IOException;
+
 public class Crawler
 {
-    public static void run(String[] args )
-    {
+    public static void run(String[] args ){
         try {
             ArgumentsManager.initCrawler(args);
             CrawlerManager spider = CrawlerManager.getInstance();
@@ -30,7 +31,9 @@ public class Crawler
         }
         catch(Exception e) // CATCH EVERYTHING
         {
+            CrawlerManager.write2logfile("Ala bala portocala");
             System.out.println(e.getMessage());
+
         }
     }
 }
