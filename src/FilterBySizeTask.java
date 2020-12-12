@@ -1,8 +1,5 @@
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Aceasta clasa implementeaza crearea unui task prin
@@ -17,6 +14,7 @@ public class FilterBySizeTask implements Task {
      */
     private String path;
     private int size;
+
 
     /**
      * Constructorul clasei FilterBySizeTask
@@ -43,8 +41,11 @@ public class FilterBySizeTask implements Task {
      * unui director care nu exista.
      *
      */
-    public void filterBySize(File dirPath) throws DirectoryNotFoundException {
+    public void filterBySize(File dirPath) throws DirectoryNotFoundException, IOException {
         if (!dirPath.isDirectory()) {
+
+            String message = "ERROR: Directory not found.";
+            CrawlerManager.write2logfile(message);
             throw new DirectoryNotFoundException("Directory not found.");
 
         }
@@ -69,8 +70,10 @@ public class FilterBySizeTask implements Task {
      */
 
     @Override
-    public void execute() throws DirectoryNotFoundException {
+    public void execute() throws DirectoryNotFoundException, IOException {
         File dirPath = new File(this.path);
+        String message = "INFO: Searching for files larger than " + Integer.toString(this.size);
+        CrawlerManager.write2logfile(message);
         filterBySize(dirPath);
     }
 }
