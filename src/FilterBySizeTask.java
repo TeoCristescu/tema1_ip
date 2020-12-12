@@ -1,5 +1,8 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Aceasta clasa implementeaza crearea unui task prin
@@ -27,6 +30,7 @@ public class FilterBySizeTask implements Task {
         this.size = size;
     }
 
+
     /**
      * Functia de filtrare a fisierelor.
      * Se vor afisa toate fisierele care au marimea mai mare decat cea specificata.
@@ -42,6 +46,7 @@ public class FilterBySizeTask implements Task {
     public void filterBySize(File dirPath) throws DirectoryNotFoundException {
         if (!dirPath.isDirectory()) {
             throw new DirectoryNotFoundException("Directory not found.");
+
         }
         File filesList[] = dirPath.listFiles();
         for (File file : filesList) {
