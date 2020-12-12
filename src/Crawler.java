@@ -31,7 +31,7 @@ public class Crawler
         }
         catch(Exception e) // CATCH EVERYTHING
         {
-            CrawlerManager.write2logfile("Ala bala portocala");
+
             System.out.println(e.getMessage());
 
         }
