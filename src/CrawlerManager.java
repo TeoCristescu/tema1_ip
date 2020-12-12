@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 public class CrawlerManager {
 
@@ -14,10 +15,20 @@ public class CrawlerManager {
     private String search_argument;
     private String extensions;
     private int filter_size;
+    private static LogManager log= new LogManager();
+    
 
     private CrawlerManager(){
-    }
 
+    }
+    static void write2logfile(String message)  {
+        try{
+            log.writeToLogFile(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     public static CrawlerManager getInstance(){
         if(obj==null)
         {
@@ -53,7 +64,6 @@ public class CrawlerManager {
                 }
                 else if (line.contains("URL")) {
                     URL = line.substring(4);
-
                 }
                 else if (line.contains("extensions")) {
                     extensions = line.substring(11);

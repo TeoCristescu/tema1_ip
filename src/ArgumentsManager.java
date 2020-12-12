@@ -112,7 +112,7 @@ public class ArgumentsManager
                     spider.list_config(args[1], args[2]);
                     break;
                 case "search":
-                    spider.setType(args[1]);
+                    spider.setType(args[0]);
                     spider.search_config(args[1], args[2]);
                     break;
                 case "filter":
@@ -148,6 +148,7 @@ public class ArgumentsManager
 
 
             default:
+                CrawlerManager.write2logfile("Too many arguments!");
                 throw new ExceptieArgumente("Too many arguments!\n");
         }
     }
