@@ -15,7 +15,23 @@ public   class CrawlerThread extends Thread {
     public void run(){
         downloadTask(mydownloadPending,startIndex,endIndex);
     }
+    public File createFile(String calea2,int index,String theExtension)
+    {
 
+
+
+        System.out.println(" calea "+calea2+"index"+index+theExtension);
+
+        File f = new File(calea2 + "index" + index + theExtension);
+        f.getParentFile().mkdirs();
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return f;
+
+    }
 
     public void downloadTask(URLQueue downloadPending,int start,int end)  {
         //BufferedReader reader;
@@ -28,12 +44,15 @@ public   class CrawlerThread extends Thread {
             String[] arrOfStr = url.toString().split("\\?", 2); //cut off GET parameters
             String withoutAsk=arrOfStr[0];
             String[] calea=withoutAsk.split("//",0);//cut off http or https
-            //System.out.println("calea "+calea[1]);
-            //String names[]=calea[1].split("/",0);//
-            //int nrNames=names.length;
             String calea2=calea[1].replaceAll("/","\\\\");
             calea2=root_dir+"\\"+calea2;
-            System.out.println("Calea: "+calea2);
+            String lastCH=calea2.substring(calea2.length() - 1);
+            if(lastCH.equals("\\")==false)
+            {
+                calea2+="\\";
+
+            }
+
             try {
 
                 //reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -55,20 +74,18 @@ public   class CrawlerThread extends Thread {
                         }
                     }
 
-                System.out.println("extension "+theExtension);
-                System.out.println("calea "+calea2);
+
+
                 if(theExtension.equals(".html"))
                 {
-
-                    File f = new File(calea2 + "index" + i + theExtension);
-                    f.getParentFile().mkdirs();
-                    try {
-                        f.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    File f=createFile(calea2,i,theExtension);
                     BufferedReader reader =  new BufferedReader(new InputStreamReader(url.openStream()));
+
                     BufferedWriter writer = new BufferedWriter(new FileWriter(calea2 + "index" + i + theExtension));
+                //    System.out.println("extension "+theExtension);
+                //    System.out.println("Calea: "+ calea2  + "index" + i + theExtension);
+                //    System.out.println("FromURL "+url.toString());
+
                     String line;
                     while ((line = reader.readLine()) != null) {
 
@@ -100,14 +117,11 @@ public   class CrawlerThread extends Thread {
                     int length = -1;
                     byte[] buffer = new byte[4096];
                     //writer = new BufferedWriter(new FileWriter(calea2+"index"+i+theExtension));
-                    File f = new File(calea2 + "index" + i + theExtension);
-                    f.getParentFile().mkdirs();
-                    try {
-                        f.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
+                    File f=createFile(calea2,i,theExtension);
+                   // System.out.println("extension "+theExtension);
+                   // System.out.println("Calea: "+ calea2  + "index" + i + theExtension);
+                   // System.out.println("FromURL "+url.toString());
                     FileOutputStream fos = new FileOutputStream(f);
 
                     // System.out.println("pagina "+i+" este "+url.toString());

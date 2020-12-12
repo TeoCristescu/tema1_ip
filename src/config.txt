@@ -1,5 +1,5 @@
-n_threads=4
+n_threads=1
 root_dir=D:\test
 max_depth=0
 extensions=.pdf#.png#.docx#.jpg
-URL=http://www.dhs.state.il.us/OneNetLibrary/27897/documents/Initiatives/IITAA/Sample-Document.docx
+URL=https://www.emag.ro/
