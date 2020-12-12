@@ -16,9 +16,79 @@ public class DownloadTask implements Task {
     private int numThreads;
     private String extensions;
     private int depthLevel;
+    private ArrayList<String>disalowList;
     String domain;
     URLQueue downloadPending;
+    public void getDisalowList(URL toDownloadURL)
+    {
+        this.disalowList=new ArrayList<String>();
+        URL robotsURL=null;
+        try
+        {
+            robotsURL = new URL(toDownloadURL.getProtocol() + "://" + toDownloadURL.getHost()+"/robots.txt");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(robotsURL.openStream()));
+            String line;
+            int start=0;
+            while ((line = reader.readLine()) != null) {
+
+
+
+                if(line.equals("User-agent: *"))
+                {   start=1;
+
+                }
+                if(start==1)
+                {
+                    if(line.contains("Disallow:"))
+                    {
+                        String[] auxLines=line.split(" ");
+                         
+                        this.disalowList.add(auxLines[1]);
+
+                    }
+                    if(line.length()==0)
+                    {
+                        break;
+                    }
+                }
+
+            }
+
+        }
+        catch ( Exception e1)
+        {
+            System.out.println("Pagina robots nu exista:");
+            System.out.println(e1.toString());
+        }
+
+
+
+    }
+
+    public boolean  isAllowed(URL toCheck)
+    {
+        int size=this.disalowList.size();
+
+        for(int i=0;i<size;i++)
+        {
+            String pattern = this.disalowList.get(i);
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(toCheck.toString());
+            if (m.find( ))
+            {
+            return false;
+            }
+        }
+        return true;
+    }
     @Override
+
+
     public void execute()  {
         URL toDownload=null;
         try {
@@ -29,15 +99,21 @@ public class DownloadTask implements Task {
         }
         //String line = null;
         downloadPending.addToList(toDownload);
+        String urlRegex= toDownload.getProtocol() + "://" + toDownload.getHost();
+
+        System.out.println("domeniu"+this.domain);
+
+        urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
+
         int indexQ=0;
 
-
+        this.getDisalowList(toDownload);
             int auxIndexQ=indexQ;
             for(int i=0;i<depthLevel;i++)
             {
                 int qsize=this.downloadPending.getSize();
-                String urlRegex=this.domain;
-                urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
+
+
                 for(int j=indexQ;j<qsize;j=j+1)
                 {
                     //System.out.println("depth "+i+" j "+j+" qsize "+qsize);
@@ -45,15 +121,7 @@ public class DownloadTask implements Task {
                     String line;
                     try {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(toDownAux.openStream()));
-                        //String urlRegex = "(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-                        //String urlRegex=this.domain;
-                        urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
-                        //System.out.println(urlRegex);
-                        Pattern urlPattern = Pattern.compile(urlRegex);
-                        line="";
                         Matcher regexMatcher;
-
-
                         while ((line = reader.readLine()) != null) {
                             Pattern r = Pattern.compile(urlRegex);
                             Matcher m = r.matcher(line);
@@ -64,12 +132,14 @@ public class DownloadTask implements Task {
                                     URL aux = new URL(m.group(0));
                                     if(this.downloadPending.exists_elem(aux)==0)
                                     {
-                                        this.downloadPending.addToList(aux);
-                                        auxIndexQ++;
+                                        if(isAllowed(aux)==true) {
+                                            this.downloadPending.addToList(aux);
+                                            auxIndexQ++;
+                                        }
                                     }
                                 }
                             }
-                            //System.out.println(line);
+
                         }
                     }
                     catch ( Exception e1)
@@ -118,6 +188,7 @@ public class DownloadTask implements Task {
         this.downloadPending=new URLQueue();
         this.extensions=_extensions;
         this.depthLevel=_depthLevel;
+
     }
     public void listURLQ()
     {
