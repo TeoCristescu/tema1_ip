@@ -48,6 +48,8 @@ public class SitemapTask implements Task {
     {
         if(!dirPath.isDirectory())
         {
+            String message = "ERROR: This folder is not a directory.";
+            CrawlerManager.write2logfile(message);
             throw new DirectoryNotFoundException("This folder is not a directory.");
         }
         int index=0;
@@ -73,6 +75,8 @@ public class SitemapTask implements Task {
     private void generateSitemap(File dirpath, int index, StringBuilder sb) throws DirectoryNotFoundException {
         if(!dirpath.isDirectory())
         {
+            String message = "ERROR: This folder is not a directory.";
+            CrawlerManager.write2logfile(message);
             throw new DirectoryNotFoundException("This folder is not a directory.");
         }
         sb.append(getIndentString(index));
@@ -148,17 +152,23 @@ public class SitemapTask implements Task {
         String sitemap= generateSitemap(dirPath);
         String newpath=dirPath + "/" + "sitemap.txt";
         File sitemap_file=new File(newpath);
+        String message = "INFO: Creating the sitemap file.";
+        CrawlerManager.write2logfile(message);
         if(sitemap_file.exists()) {
             sitemap_file.delete();
         }
         if(!sitemap_file.createNewFile())
         {
+            message = "ERROR: Error creating sitemap file.";
+            CrawlerManager.write2logfile(message);
             throw new DirectoryNotFoundException("Error creating file.");
         }
         else {
             FileWriter myWriter = new FileWriter(newpath);
             myWriter.write(sitemap.toString());
             myWriter.close();
+            message = "INFO: Writing to the sitemap file.";
+            CrawlerManager.write2logfile(message);
         }
     }
 }
