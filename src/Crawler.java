@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class Crawler
 {
     public static void run(String[] args ){
@@ -31,9 +29,7 @@ public class Crawler
         }
         catch(Exception e) // CATCH EVERYTHING
         {
-
             System.out.println(e.getMessage());
-
         }
     }
 }
