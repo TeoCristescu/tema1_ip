@@ -1,4 +1,4 @@
-n_threads=1
+n_threads=4
 root_dir=D:\test
 max_depth=0
 extensions=.pdf#.png#.docx#.jpg
