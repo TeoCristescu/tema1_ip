@@ -1,5 +1,16 @@
+/**
+ *  Aceasta este clasa principală din aplicație în care se crează și
+ *  se execută un task în funcție de argumentele introduse de utilizator.
+ *
+ * @author Avram Gabriel
+ */
+
+
 public class Crawler
 {
+    /**
+     * Funcția run crează un task în funcție de primul a
+     */
     public static void run(String[] args ){
         try {
             ArgumentsManager.initCrawler(args);
