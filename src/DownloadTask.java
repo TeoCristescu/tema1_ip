@@ -70,8 +70,10 @@ public class DownloadTask implements Task {
                     if(line.contains("Disallow:"))
                     {
                         String[] auxLines=line.split(" ");
-                         
-                        this.disalowList.add(auxLines[1]);
+                        String withoutStar=auxLines[1].replaceAll("\\*","");
+
+                        this.disalowList.add(withoutStar);
+                        
 
                     }
                     if(line.length()==0)
@@ -138,7 +140,7 @@ public class DownloadTask implements Task {
             e.printStackTrace();
 
         }
-        System.out.println("domeniu"+mydomain);
+        System.out.println("domeniu "+mydomain);
 
         urlRegex+="[a-zA-Z0-9+&@#/%?=~_|!:,.;\\-]*";
 

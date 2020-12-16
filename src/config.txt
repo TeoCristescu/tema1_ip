@@ -1,5 +1,5 @@
-n_threads=1
+n_threads=4
 root_dir=D:\test
-max_depth=0
+max_depth=1
 extensions=.pdf#.png#.docx#.jpg
-URL=https://www.emag.ro/
+URL=https://www.autovit.ro/autoturisme/volkswagen/
