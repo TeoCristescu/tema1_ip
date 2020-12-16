@@ -74,6 +74,7 @@ public   class CrawlerThread extends Thread {
 
 
             String theExtension=".html";
+            calea2=root_dir+"\\"+calea2;
             try {
 
                 //reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -101,18 +102,20 @@ public   class CrawlerThread extends Thread {
                 }
 
 
-                System.out.println("extensia "+theExtension);
+               
                 if(theExtension.length()==0)
                 {
                     theExtension=".html";
                 }
-                calea2=root_dir+"\\"+calea2;
+
                 String lastCH=calea2.substring(calea2.length() - 1);
                 if(lastCH.equals("\\")==false)//daca fișierul nu se termina cu \ adaug unul pentru organizarea in subdirectoare
                 {
                     calea2+="\\";
 
                 }
+
+
 
                 //documentele doc,pdf etc. se descarca diferit fața de cele html
                 if(theExtension.equals(".html"))
@@ -131,12 +134,12 @@ public   class CrawlerThread extends Thread {
                         if (myLink.contains("href=\"http://")) {
                             myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
                             needs_replacement = true;
-							myLink=myLink.replaceAll("/","\\\\");
+							//myLink=myLink.replaceAll("/","\\\\");
                         }
                         if (myLink.contains("href=\"https://")) {
                             myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
                             needs_replacement = true;
-							myLink=myLink.replaceAll("/","\\\\");
+							//myLink=myLink.replaceAll("/","\\\\");
                         }
 
                         if (needs_replacement) {
@@ -152,8 +155,9 @@ public   class CrawlerThread extends Thread {
 
                     try {
                         mutex.acquire();
-                        CrawlerManager.write2logfile("INFO Pagina a fost salvata in fisierul"+calea2);
-                        System.out.println("INFO Pagina a fost salvata in fisierul"+calea2);
+						System.out.println("extensia "+theExtension);
+                        CrawlerManager.write2logfile("INFO Pagina a fost salvata in folderul"+calea2);
+                        System.out.println("INFO Pagina a fost salvata in folderul"+calea2);
                     } catch (InterruptedException e) {
                         System.out.println("Eroare la mutex");
                     } finally {
@@ -194,14 +198,14 @@ public   class CrawlerThread extends Thread {
                         if(myLink.contains("href=\"http://")) {
                             /* Se inlocuiesc toate aparitiile substringului cu locatia locala root_dir */
                             myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
-							myLink=myLink.replaceAll("/","\\\\");
+							//myLink=myLink.replaceAll("/","\\\\");
 							
                             needs_replacement = true;
                         }
                         /* La fel ca mai sus numai ca pentru https */
                         if(myLink.contains("href=\"https://")) {
                             myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
-							myLink=myLink.replaceAll("/","\\\\");
+							//myLink=myLink.replaceAll("/","\\\\");
                             needs_replacement = true;
                         }
 
@@ -216,8 +220,9 @@ public   class CrawlerThread extends Thread {
                     }
                     try {
                         mutex.acquire();
-                        CrawlerManager.write2logfile("INFO Pagina a fost salvata in fisierul"+calea2);
-                        System.out.println("INFO Pagina a fost salvata in fisierul"+calea2);
+                        CrawlerManager.write2logfile("INFO Pagina a fost salvata in folderul"+calea2);
+						 System.out.println("extensia "+theExtension);
+                        System.out.println("INFO Pagina a fost salvata in folderul"+calea2);
                     } catch (InterruptedException e) {
                         System.out.println("Eroare la mutex");
                     } finally {

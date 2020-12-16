@@ -98,7 +98,7 @@ public class CrawlerManager {
                 extensions = line.substring(epos+1);
                 if(extensions.length()==0)
                 {
-                    throw new ExceptieArgumente("No extensions detected. Only download html files!");
+                    CrawlerManager.write2logfile("WARNING:No extensions detected. Only download html files!");
                 }
             } else {
                 CrawlerManager.write2logfile("ERROR: Option not recognised in config file!");
