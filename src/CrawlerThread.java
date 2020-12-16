@@ -71,13 +71,8 @@ public   class CrawlerThread extends Thread {
             String withoutAsk=arrOfStr[0];
             String[] calea=withoutAsk.split("//",0);//șterg protocolul http/https
             String calea2=calea[1].replaceAll("/","\\\\");//inlocuiesc / cu \ pentru a putea crea fișiere
-            calea2=root_dir+"\\"+calea2;
-            String lastCH=calea2.substring(calea2.length() - 1);
-            if(lastCH.equals("\\")==false)//daca fișierul nu se termina cu \ adaug unul pentru organizarea in subdirectoare
-            {
-                calea2+="\\";
 
-            }
+
             String theExtension=".html";
             try {
 
@@ -86,6 +81,11 @@ public   class CrawlerThread extends Thread {
 
 
                 String[]extensionsString=this.extensions.split("#",0);
+				
+                if(!this.extensions.contains("#"))
+                {
+                    System.out.println("WARNING:Extensiile trebuie să respecte formatul: .pdf#.doc#.docx");
+                }
 
                 for (int k = 0; k < extensionsString.length; k++)
                 {
@@ -101,8 +101,18 @@ public   class CrawlerThread extends Thread {
                 }
 
 
+                System.out.println("extensia "+theExtension);
+                if(theExtension.length()==0)
+                {
+                    theExtension=".html";
+                }
+                calea2=root_dir+"\\"+calea2;
+                String lastCH=calea2.substring(calea2.length() - 1);
+                if(lastCH.equals("\\")==false)//daca fișierul nu se termina cu \ adaug unul pentru organizarea in subdirectoare
+                {
+                    calea2+="\\";
 
-
+                }
 
                 //documentele doc,pdf etc. se descarca diferit fața de cele html
                 if(theExtension.equals(".html"))
@@ -121,15 +131,18 @@ public   class CrawlerThread extends Thread {
                         if (myLink.contains("href=\"http://")) {
                             myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
                             needs_replacement = true;
+							myLink=myLink.replaceAll("/","\\\\");
                         }
                         if (myLink.contains("href=\"https://")) {
                             myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
                             needs_replacement = true;
+							myLink=myLink.replaceAll("/","\\\\");
                         }
 
                         if (needs_replacement) {
 
                             writer.write(myLink);
+							
                         }
                         else {
 
@@ -154,7 +167,7 @@ public   class CrawlerThread extends Thread {
                     int length = -1;
                     byte[] buffer = new byte[4096];
                     //writer = new BufferedWriter(new FileWriter(calea2+"index"+i+theExtension));
-
+						
                     File f=createFile(calea2,i,theExtension);
                     // System.out.println("extension "+theExtension);
                     // System.out.println("Calea: "+ calea2  + "index" + i + theExtension);
@@ -181,11 +194,14 @@ public   class CrawlerThread extends Thread {
                         if(myLink.contains("href=\"http://")) {
                             /* Se inlocuiesc toate aparitiile substringului cu locatia locala root_dir */
                             myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
+							myLink=myLink.replaceAll("/","\\\\");
+							
                             needs_replacement = true;
                         }
                         /* La fel ca mai sus numai ca pentru https */
                         if(myLink.contains("href=\"https://")) {
                             myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
+							myLink=myLink.replaceAll("/","\\\\");
                             needs_replacement = true;
                         }
 
