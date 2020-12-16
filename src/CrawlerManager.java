@@ -76,20 +76,30 @@ public class CrawlerManager {
         File f=new File(configfile);
         Scanner scan = new Scanner(f);
         String line="";
+
         while(scan.hasNextLine()) {
             line = scan.nextLine();
+            int epos=line.indexOf('=');
+            if(epos<0)
+            {
+                throw new ExceptieArgumente("Option not recognised in config file");
+            }
             if (line.contains("n_threads")) {
-                threads_nr = Integer.parseInt(line.substring(10));
+                threads_nr = Integer.parseInt(line.substring(epos+1));
             } else if (line.contains("root_dir")) {
-                root_dir = line.substring(9);
+                root_dir = line.substring(epos+1);
             } else if (line.contains("log_level")) {
-                log_level = Integer.parseInt(line.substring(10));
+                log_level = Integer.parseInt(line.substring(epos+1));
             } else if (line.contains("max_depth")) {
-                max_depth = Integer.parseInt(line.substring(10));
+                max_depth = Integer.parseInt(line.substring(epos+1));
             } else if (line.contains("URL")) {
-                URL = line.substring(4);
+                URL = line.substring(epos+1);
             } else if (line.contains("extensions")) {
-                extensions = line.substring(11);
+                extensions = line.substring(epos+1);
+                if(extensions.length()==0)
+                {
+                    throw new ExceptieArgumente("No extensions detected. Only download html files!");
+                }
             } else {
                 CrawlerManager.write2logfile("ERROR: Option not recognised in config file!");
                 throw new ExceptieArgumente("Option not recognised in config file");
