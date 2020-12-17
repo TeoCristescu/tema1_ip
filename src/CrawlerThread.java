@@ -26,6 +26,7 @@ public   class CrawlerThread extends Thread {
     private     int threadID;
     private     int numThreads;
     private     String extensions;
+    private     String root_dir;
     private Semaphore mutex = new Semaphore(1);
     @Override
     public void run(){
@@ -129,28 +130,13 @@ public   class CrawlerThread extends Thread {
                     String line;
                     while ((line = reader.readLine()) != null) {
 
-                        String myLink = line;
-                        boolean needs_replacement = false;
-                        if (myLink.contains("href=\"http://")) {
-                            myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
-                            needs_replacement = true;
-							//myLink=myLink.replaceAll("/","\\\\");
-                        }
-                        if (myLink.contains("href=\"https://")) {
-                            myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
-                            needs_replacement = true;
-							//myLink=myLink.replaceAll("/","\\\\");
-                        }
+                        String sir = line;
 
-                        if (needs_replacement) {
+                        /* Se apeleaza functia MakeLocal care schimba substringul URL-ului cu o cale locala */
+                        sir = MakeLocal(sir);
 
-                            writer.write(myLink);
-							
-                        }
-                        else {
+                        writer.write(sir);
 
-                            writer.write(line);
-                        }
                     }
 
                     try {
@@ -186,38 +172,21 @@ public   class CrawlerThread extends Thread {
                      * @author Scraba Cristian
                      */
                     while ((length = in.read(buffer)) > -1)
-                    {
-                        /*
-                         * Se copiaza buffer-ul in care citim stream-ul de octeti primt intr-o variabila locala
-                         * de tip String pentru a putea lucra cu metodele clasei String
-                         */
-                        String myLink = new String(buffer);
-                        boolean needs_replacement = false;
+                        while ((length = in.read(buffer)) > -1)
+                        {
+                            /*
+                             * Se copiaza buffer-ul in care citim stream-ul de octeti primt intr-o variabila locala
+                             * de tip String pentru a putea lucra cu metodele clasei String
+                             */
+                            String sir = new String(buffer);
 
-                        /* Se verifica existenta substringului de inceput al unui URL din cadrul atributului href */
-                        if(myLink.contains("href=\"http://")) {
-                            /* Se inlocuiesc toate aparitiile substringului cu locatia locala root_dir */
-                            myLink = myLink.replace("href=\"http://", "href=\"" + root_dir + "\\");
-							//myLink=myLink.replaceAll("/","\\\\");
-							
-                            needs_replacement = true;
-                        }
-                        /* La fel ca mai sus numai ca pentru https */
-                        if(myLink.contains("href=\"https://")) {
-                            myLink = myLink.replace("href=\"https://", "href=\"" + root_dir + "\\");
-							//myLink=myLink.replaceAll("/","\\\\");
-                            needs_replacement = true;
-                        }
+                            /* Se apeleaza functia MakeLocal care schimba substringul URL-ului cu o cale locala */
+                            sir = MakeLocal(sir);
 
-                    /*
-                    Daca s-a gasit si inlocuit acel substring vom scrie noul string in fisier,
-                    * daca nu, vom scrie stringul neschimbat
-                    */
-                        if(needs_replacement)
-                            fos.write(myLink.getBytes(), 0, myLink.length());
-                        else
-                            fos.write(buffer, 0, length);
-                    }
+                            /* Se scriu in fisier octetii */
+                            fos.write(sir.getBytes(), 0, sir.length());
+
+                        }
                     try {
                         mutex.acquire();
                         CrawlerManager.write2logfile("INFO Pagina a fost salvata in folderul"+calea2);
@@ -246,6 +215,32 @@ public   class CrawlerThread extends Thread {
             }
         }
     }
+
+    private String MakeLocal(String myLink)
+    {
+        int pos;
+        while((pos = myLink.indexOf("href=\"https://")) != -1)
+            myLink = make_local_link(myLink, pos, true);
+        while((pos = myLink.indexOf("href=\"http://")) != -1)
+            myLink = make_local_link(myLink, pos, false);
+        return myLink;
+    }
+
+    private String make_local_link(String strLink, int pos, boolean secLink)
+    {
+        String subsir = strLink.substring(pos + 6);
+        subsir = subsir.substring(0, subsir.indexOf("\""));
+        if(secLink)subsir = subsir.replace("https://", root_dir + "\\");
+        else subsir = subsir.replace("http://", root_dir + "\\");
+        subsir = subsir.replace("/", "\\");
+        String aux = strLink;
+        strLink = strLink.substring(0, pos + 6);
+        aux = aux.substring(pos + 6);
+        aux = aux.substring(aux.indexOf("\""));
+        strLink = strLink + subsir + aux;
+        return strLink;
+    }
+
 
     public void set_CrawlerThread(URLQueue _downloadPending,int _threadId,int _nrThreads)
     {
