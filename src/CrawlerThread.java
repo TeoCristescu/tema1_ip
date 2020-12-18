@@ -171,20 +171,11 @@ public   class CrawlerThread extends Thread {
                      * de configurare root_dir si scrierea noului string format in fisierul creat mai sus
                      * @author Scraba Cristian
                      */
-                    while ((length = in.read(buffer)) > -1)
+
                         while ((length = in.read(buffer)) > -1)
                         {
-                            /*
-                             * Se copiaza buffer-ul in care citim stream-ul de octeti primt intr-o variabila locala
-                             * de tip String pentru a putea lucra cu metodele clasei String
-                             */
-                            String sir = new String(buffer);
 
-                            /* Se apeleaza functia MakeLocal care schimba substringul URL-ului cu o cale locala */
-                            sir = MakeLocal(sir);
-
-                            /* Se scriu in fisier octetii */
-                            fos.write(sir.getBytes(), 0, sir.length());
+                            fos.write(buffer, 0, length);
 
                         }
                     try {
